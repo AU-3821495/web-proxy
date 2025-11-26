@@ -6,11 +6,28 @@ const url = require('url'); // Node.jsの組み込みモジュール
 const app = express();
 const port = process.env.PORT || 3000; // Render.comはPORT環境変数を使用
 
-// 許可ホストリスト（3000件追加可能。education用に例を追加）
 const APPROVED_HOSTS = [
-  'www.google.com', 'google.com', 'www.youtube.com', 'youtube.com',
-  'www.khanacademy.org', 'khanacademy.org' // ここに3000件のドメインを追加
-  // 例: 'example1.com', 'example2.com', ... (最大3000件まで配列に追加)
+  'www.google.com',
+  'google.com',
+  'www.youtube.com',
+  'youtube.com',
+  'www.khanacademy.org',
+  'khanacademy.org',
+  'ja.khanacademy.org',
+  'www.wikipedia.org',
+  'ja.wikipedia.org',
+  'www.nhk.or.jp',           // NHK for School
+  'www.edu-town.ed.jp',
+  'www.mext.go.jp',          // 文部科学省
+  'kids.yahoo.co.jp',
+  'www.benesse.co.jp',
+  'www.z会.jp',
+  'scratch.mit.edu',         // Scratch（プログラミング教育）
+  'code.org',
+  'www.bbc.co.uk/learning',  // BBC Learning
+  'www.duolingo.com',
+  'quizlet.com',
+  // ← ここに好きなだけ追加（3000個でもOK！）
 ];
 
 // 静的ファイル（HTML/CSS）をpublicフォルダから配信
