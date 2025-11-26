@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>Web Proxy</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1>Web Proxy</h1>
+  <p>URLを入力（例: www.google.com）。許可されたサイトのみ中継します。</p>
+  <input type="text" id="urlInput" placeholder="www.example.com">
+  <button onclick="loadProxy()">ロード</button>
+  <iframe id="proxyFrame" width="100%" height="600"></iframe>
+
+  <script>
+    function loadProxy() {
+      const url = document.getElementById('urlInput').value;
+      const proxyUrl = `/p/${url}`;
+      document.getElementById('proxyFrame').src = proxyUrl;
+    }
+  </script>
+</body>
+</html>
