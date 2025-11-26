@@ -1,23 +1,64 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8">
-  <title>Web Proxy</title>
-  <link rel="stylesheet" href="style.css">
+  <meta charset="utf-8">
+  <title>教育向け Web Proxy on Render</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    :root { color-scheme: light dark; }
+    body { margin: 0; font-family: system-ui, sans-serif; }
+    header { display:flex; gap:8px; padding:10px; border-bottom:1px solid #ccc; }
+    input[type="url"] { flex:1; padding:8px; font-size:14px; }
+    button { padding:8px 12px; }
+    iframe { width:100%; height: calc(100vh - 56px); border:0; }
+    .hint { font-size:12px; color:#666; padding:6px 10px; }
+  </style>
 </head>
 <body>
-  <h1>Web Proxy</h1>
-  <p>URLを入力（例: www.google.com）。許可されたサイトのみ中継します。</p>
-  <input type="text" id="urlInput" placeholder="www.example.com">
-  <button onclick="loadProxy()">ロード</button>
-  <iframe id="proxyFrame" width="100%" height="600"></iframe>
+  <header>
+    <input id="url" type="url" placeholder="https://example.com" />
+    <button id="go">Go</button>
+    <button id="edu">教育モード: ON</button>
+  </header>
+  <div class="hint">
+    注意: 埋め込み不可のサイト（X-Frame-Options/CSPが厳しい）は iframe 表示できません。URL欄から別サイトを試してください。
+  </div>
+  <iframe id="view" sandbox="allow-scripts allow-forms allow-same-origin"></iframe>
 
   <script>
-    function loadProxy() {
-      const url = document.getElementById('urlInput').value;
-      const proxyUrl = `/p/${url}`;
-      document.getElementById('proxyFrame').src = proxyUrl;
+    const urlBox = document.getElementById('url');
+    const frame = document.getElementById('view');
+    const eduBtn = document.getElementById('edu');
+    let eduOn = true;
+
+    function toProxy(u) {
+      return '/proxy?url=' + encodeURIComponent(u);
     }
+
+    function go() {
+      const raw = urlBox.value.trim();
+      if (!raw) return;
+      try {
+        const u = new URL(raw);
+        if (eduOn) {
+          // simple hint: enforce https, block unknown schemes
+          if (!['http:', 'https:'].includes(u.protocol)) {
+            alert('http/httpsのみ対応');
+            return;
+          }
+        }
+        frame.src = toProxy(u.toString());
+      } catch {
+        alert('URLが不正です');
+      }
+    }
+
+    document.getElementById('go').addEventListener('click', go);
+    urlBox.addEventListener('keydown', e => { if (e.key === 'Enter') go(); });
+    eduBtn.addEventListener('click', () => {
+      eduOn = !eduOn;
+      eduBtn.textContent = '教育モード: ' + (eduOn ? 'ON' : 'OFF');
+    });
   </script>
 </body>
 </html>
